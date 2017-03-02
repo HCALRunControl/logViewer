@@ -12,6 +12,7 @@ def getHeader():
   </head>
   <!-- <body onload="setContrast();">
          do this in the python -->
+  <body>
     <div id="wrapper">
     <h3>webHandsaw</h3>
     <br>
