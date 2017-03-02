@@ -42,7 +42,3 @@ while True:
   copyProc2.wait()
   os.remove("log2.xml")
   copyProc2 = subprocess.Popen(args2, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-  
-
-  
-
