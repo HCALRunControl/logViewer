@@ -26,6 +26,7 @@ def changeColors(styledLine):
   styledLine = styledLine.replace('background-color:#00CD00', 'background-color:#00ae00; color:#ffffff')
   styledLine = styledLine.replace('background-color:#CD0000', 'background-color:#dd3844; color:#ffffff')
   styledLine = styledLine.replace('background-color:#00CDCD', 'background-color:#4c77aa; color:#ffffff')
+  styledLine = styledLine.replace('background-color:#CD00CD', 'background-color:#000000; color:#ff3333')
   styledLine = styledLine.replace('background-color:#CDCD00', 'background-color:#e8e866')
   return styledLine
   
