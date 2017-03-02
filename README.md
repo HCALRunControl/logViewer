@@ -12,7 +12,7 @@ apache machine:
       index.html
       shifterHomePage.css
 
-cmsrc-hcal:
+run control machine:
   ~<nfshome0Dir>
      logCopy.py
      mkLog1.sh
