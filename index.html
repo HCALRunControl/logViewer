@@ -1,0 +1,32 @@
+<html>
+  <!-- 
+    request page for webHandsaw this page is where a user fills
+    out the form that gets submitted to logViewer.py 
+    if you have any problems with this page, please email
+    john_hakala@brown.edu or ka_hei_martin_kwok@brown.edu
+    John Hakala 3/2/2017                                   
+   -->
+  <head>
+     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700" rel="stylesheet" type="text/css">
+     <link rel="stylesheet" type="text/css" href="/shifterHomePage.css"> 
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>webHandsaw</h1>
+      This page will retrieve the latest logs from the LogCollector logs (just like <tt>tail -NUMBER</tt>).
+      <br><br>
+      <form action="/cgi-bin/jhakala/viewLogs.py" type="submit" method="get">
+        Number of lines to show:
+        <input type="number" name="numberOfLines">
+        <br><br>
+        Filter level: <br><tt>
+          <input type="radio" name="filter" value="INFO" checked> info<br>
+          <input type="radio" name="filter" value="WARN"> warn<br>
+          <input type="radio" name="filter" value="ERROR"> error 
+        </tt>
+        <br><br>
+        <input type="submit">
+      </form>
+    </div>
+  </body>
+</html>

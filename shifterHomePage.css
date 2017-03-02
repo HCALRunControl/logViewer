@@ -1,0 +1,20 @@
+body {
+  background-color: #f8f8f8;
+  font-family: "Open Sans", sans-serif;
+}
+h1 {
+  font-size: 32px;
+  color: #3a5165;
+}
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: #0033bb;
+}
+ul {
+  -moz-column-width: 440px;
+}
+#wrapper {
+  padding-left: 30px;
+}
