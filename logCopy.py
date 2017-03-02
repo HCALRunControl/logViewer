@@ -16,6 +16,8 @@ from forcelink import force_symlink
 # so the role of "full one" has been taken over by the 12 hour old copy
 # and the process to fill the one that just got deleted is restarted, 
 # which then becomes the new "buffering" one
+#
+# John Hakala, 3/2/2017
 
 # Start by making both processes... would be nicer to start proc2 later but it's not as easy
 args1 = "./mkLog1.sh"
