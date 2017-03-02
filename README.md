@@ -17,6 +17,7 @@ run control machine:
      logCopy.py
      mkLog1.sh
      mkLog2.sh
+     forcelink.py
 ```
 
 The `ansi2html.py` file can be taken from [here](https://github.com/Kronuz/ansi2html).
