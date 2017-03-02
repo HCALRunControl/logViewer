@@ -3,7 +3,7 @@
 To deploy at systems like P5 or 904, the source files must be arranged like this:
 ```
 httpd machine:
-  /var/www:
+  /var/www
     /cgi-bin/<webHandsawDirsName>
       viewLogs.py
       logHtml.py
