@@ -1,0 +1,36 @@
+body {
+  background-color: #f8f8f8;
+  font-family: "Open Sans", sans-serif;
+}
+#top {
+  padding-left: 30px;
+  padding-bottom: 15px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: #3a5165;
+  padding-top: 15px;
+}
+h1 {
+  font-size: 32px;
+  color: #eeeeee;
+  display: inline;
+  padding-left: 32px;
+}
+img {
+  float: left;
+}
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: #0033bb;
+}
+ul {
+  -moz-column-width: 440px;
+}
+#wrapper {
+  padding-left: 30px;
+  padding-top: 85px;
+}
