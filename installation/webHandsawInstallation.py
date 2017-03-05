@@ -6,6 +6,16 @@ from socket import gethostbyname, gethostname
 import shutil
 from generateIndex import generateIndex
 
+# Script to install webHandsaw
+# This sets up the directory structure needed for both the httpd machine and the run control machine
+# use the --help option for instructions
+# this is only so long because it checks very carefully that it doesn't accidentally do something bad
+# like e.g. it makes sure not to overwrite anything, it checks whether it's on the correct machine or not
+# it makes sure all the directory structures that should already be there are there and those that shouldn't 
+# already be there aren't
+#
+# John Hakala, 3/5/2017
+
 def getConfigParameters(httpdRC):
   rcParameters =    ["Run control machine", "LogCollector log", "Log copy directory"]
 
