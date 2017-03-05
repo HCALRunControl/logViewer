@@ -4,11 +4,11 @@ To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf
 
 On the httpd machine:
 ```
-python webHandsawInstallation.py -w httpd -s MY_System_Name
+python webHandsawInstallation.py -w httpd -s My_System_Name
 ```
 On the run control machine:
 ```
-python webHandsawInstallation.py -w rc -s MY_System_Name
+python webHandsawInstallation.py -w rc -s My_System_Name
 ```
 The `ansi2html.py` file can be taken from [here](https://github.com/Kronuz/ansi2html).
 
