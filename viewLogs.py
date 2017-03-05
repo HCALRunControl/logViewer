@@ -4,6 +4,7 @@ import cgitb; cgitb.enable()  # for troubleshooting
 from commands import getoutput
 from ansi2html import ansi2html
 from logHtml import *
+from ConfigParser import ConfigParser
 
 # John Hakala, 2/25/17
 # this pyCGI script looks at the log copy (symlink) from logCopy.py
@@ -14,8 +15,10 @@ from logHtml import *
 # logHtml's helper functions are called to grab some chunks of html, and the html is assembled
 # finally, an html page is printed to stdout (which apache grabs and serves over the web)
 
-def getLastLogMessages(lines, filter):
-  logCopyName = "~johakala/logCopyer/log_copy.xml"
+def getLastLogMessages(lines, filter, sys):
+  config = ConfigParser()
+  config.read("webHandsaw_conf.ini")
+  logCopyName = "%s/log_copy.xml" % config.get(sys, "Log copy directory")
   incantation = "tail -%i %s | ~hcalpro/scripts/Handsaw.pl" % (lines, logCopyName)
   if filter is not None and filter in ["INFO", "WARN", "ERROR"]:
     incantation += " --FILTER=%s" % filter
@@ -38,14 +41,14 @@ def formatMessages(messages):
   formattedMessages += "    </tt>"
   return formattedMessages
 
-def getBody(numLines, filtLev):
+def getBody(numLines, filtLev, sysName):
   body =  "    <!-- begin body -->\n"
   if numLines is not None and (isinstance(numLines, int) or isinstance(numLines, str)):
     try: 
       nLines = int(numLines)
       if nLines > 0:
         body += "    Showing last %i lines of logcollector logs" % nLines
-        body += formatMessages(getLastLogMessages(nLines, filtLev))
+        body += formatMessages(getLastLogMessages(nLines, filtLev, sysName))
       else:
         body += "    the numberOfLines submitted seems to be a weird number: <tt> %s </tt>" % str(numLines)
     except ValueError:
@@ -60,10 +63,11 @@ def getBody(numLines, filtLev):
 
 form = cgi.FieldStorage()
 numberOfLines =  form.getvalue('numberOfLines')
+systemName =  form.getvalue('systemName')
 filterLevel =  form.getvalue('filter')
 
 html =  getHeader()
-html += getBody(numberOfLines, filterLevel)
+html += getBody(numberOfLines, filterLevel, systemName)
 html += getFooter()
 
 print "Content-type: text/html"

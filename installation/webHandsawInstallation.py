@@ -4,6 +4,7 @@ from optparse import OptionParser
 from pprint import pprint
 from socket import gethostbyname, gethostname
 import shutil
+from generateIndex import generateIndex
 
 def getConfigParameters(httpdRC):
   rcParameters =    ["Run control machine", "LogCollector log", "Log copy directory"]
@@ -64,7 +65,7 @@ def installRC(parameters):
     print "To launch log copying process on the run control machine, please run:"
     print "  cd %s; python logCopy.py &" % parameters["Log copy directory"] 
      
-def installHTTPD(parameters):
+def installHTTPD(parameters, sysName, overwrite):
   print "installation parameters are:" 
   pprint(parameters)
   if not path.exists(parameters["ansi2html.py file"]):
@@ -92,6 +93,8 @@ def installHTTPD(parameters):
   else:
     "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..."
   cgiBinSubdir = path.join(cgiBinDir, parameters["webHandsaw cgi subdirectory"]) 
+  if overwrite:
+    shutil.rmtree(cgiBinSubdir)
   if path.exists(cgiBinSubdir):
     print "Error: webHandsaw cgi subdirectory already exists in the requested location: %s" % cgiBinSubdir
     exit(1)
@@ -99,6 +102,8 @@ def installHTTPD(parameters):
     print "Making directory %s for webHandsaw's pyCGI files..." % cgiBinSubdir
     makedirs(cgiBinSubdir)
   htmlSubdir = path.join(htmlDir, parameters["webHandsaw html subdirectory"])
+  if overwrite:
+    shutil.rmtree(htmlSubdir)
   if path.exists(htmlSubdir):
     print "Error: webHandsaw html subdirectory already exists in the requested location: %s" % htmlSubdir
     exit(1)
@@ -106,8 +111,9 @@ def installHTTPD(parameters):
     print "Making directory %s for webHandsaw's pyCGI files..." % cgiBinSubdir
     makedirs(htmlSubdir)
   print "Copying the html and pyCGI files into the directories %s and %s, respectively." % (htmlSubdir, cgiBinSubdir)
-  htmlFiles = ["../index.html", "../webHandsaw.css", "../webHandsaw.png", "../webHandsaw_black.png"]
-  cgiBinFiles = ["../viewLogs.py", "../logHtml.py", "../forcelink.py", parameters["ansi2html.py file"]]
+  generateIndex("/%s/%s" % (parameters["httpd cgi-bin directory"], parameters["webHandsaw cgi subdirectory"]), sysName)
+  htmlFiles = ["/tmp/index.html", "../webHandsaw.css", "../webHandsaw.png", "../webHandsaw_black.png"]
+  cgiBinFiles = ["../viewLogs.py", "../logHtml.py", "../forcelink.py", parameters["ansi2html.py file"], "webHandsaw_conf.ini"]
   for htmlFile in htmlFiles:
     shutil.copy(htmlFile, htmlSubdir)
   for cgiBinFile in cgiBinFiles:
@@ -118,12 +124,14 @@ def installHTTPD(parameters):
 if __name__ == "__main__":
   optParser = OptionParser()
   optParser.add_option("-s", "--system_name", dest="system_name",
-                       help = "The system name to install. They are specified in webHandsaw_conf.ini")
+                       help = "The system name to install. They are specified in webHandsaw_conf.ini" )
   optParser.add_option("-w", "--httpd_or_rc", dest="httpd_or_rc",
                        help = "What this script will try to install: %s"
                             % "either 'httpd' to install httpd-side stuff %s" 
-                            % "or 'rc' to install the run-control machine side stuff"
-                      )
+                            % "or 'rc' to install the run-control machine side stuff"                 )
+  optParser.add_option("-o", action="store_true", dest="overwrite", default="False",
+                       help = "Use -o during httpd machine installation if you want to overwrite %s"
+                            % "a preexisting installation of webHandsaw."                             )
   (options, args) = optParser.parse_args()
 
   if options.httpd_or_rc is None: 
@@ -138,4 +146,4 @@ if __name__ == "__main__":
   if options.httpd_or_rc == "rc":
     installRC(installParameters)
   elif options.httpd_or_rc == "httpd":
-    installHTTPD(installParameters)
+    installHTTPD(installParameters, options.system_name, options.overwrite)
