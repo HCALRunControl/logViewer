@@ -15,10 +15,8 @@ from ConfigParser import ConfigParser
 # logHtml's helper functions are called to grab some chunks of html, and the html is assembled
 # finally, an html page is printed to stdout (which apache grabs and serves over the web)
 
-def getLastLogMessages(lines, filter, sys):
-  config = ConfigParser()
-  config.read("webHandsaw_conf.ini")
-  logCopyName = "%s/log_copy.xml" % config.get(sys, "Log copy directory")
+def getLastLogMessages(lines, filter, copyDir):
+  logCopyName = "%s/log_copy.xml" % copyDir
   incantation = "tail -%i %s | ~hcalpro/scripts/Handsaw.pl" % (lines, logCopyName)
   if filter is not None and filter in ["INFO", "WARN", "ERROR"]:
     incantation += " --FILTER=%s" % filter
@@ -42,13 +40,17 @@ def formatMessages(messages):
   return formattedMessages
 
 def getBody(numLines, filtLev, sysName):
+  config = ConfigParser()
+  config.read("webHandsaw_conf.ini")
   body =  "    <!-- begin body -->\n"
-  if numLines is not None and (isinstance(numLines, int) or isinstance(numLines, str)):
+  if not sysName in (config.sections()):
+    body += "the system specified was not found: <tt>%s</tt>" % sysName
+  elif numLines is not None and (isinstance(numLines, int) or isinstance(numLines, str)):
     try: 
       nLines = int(numLines)
       if nLines > 0:
         body += "    Showing last %i lines of logcollector logs" % nLines
-        body += formatMessages(getLastLogMessages(nLines, filtLev, sysName))
+        body += formatMessages(getLastLogMessages(nLines, filtLev, config.get(sysName, "Log copy directory" )))
       else:
         body += "    the numberOfLines submitted seems to be a weird number: <tt> %s </tt>" % str(numLines)
     except ValueError:
