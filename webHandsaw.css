@@ -3,7 +3,6 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 #top {
-  padding-left: 30px;
   padding-bottom: 15px;
   position: absolute;
   top: 0px;
@@ -14,21 +13,13 @@ body {
 }
 h1 {
   font-size: 32px;
-  color: #eeeeee;
+  color: #cecece;
   display: inline;
   padding-left: 32px;
 }
 img {
   float: left;
-}
-a {
-  text-decoration: none;
-}
-a:visited {
-  color: #0033bb;
-}
-ul {
-  -moz-column-width: 440px;
+  padding-left: 30px;
 }
 #wrapper {
   padding-left: 30px;
