@@ -118,7 +118,7 @@ def installHTTPD(parameters, sysName, overwrite):
     print "Error: webHandsaw html subdirectory already exists in the requested location: %s" % htmlSubdir
     exit(1)
   else:
-    print "Making directory %s for webHandsaw's pyCGI files..." % cgiBinSubdir
+    print "Making directory %s for webHandsaw's html, css, and image files..." % htmlSubdir
     makedirs(htmlSubdir)
   print "Copying the html and pyCGI files into the directories %s and %s, respectively." % (htmlSubdir, cgiBinSubdir)
   generateIndex("/%s/%s" % (parameters["httpd cgi-bin directory"], parameters["webHandsaw cgi subdirectory"]), sysName)
