@@ -11,7 +11,8 @@ def getConfigParameters(httpdRC):
   httpdParameters = [
                      "httpd machine"              , "httpd installation directory" ,
                      "httpd cgi-bin directory"    , "httpd html directory"         ,
-                     "webHandsaw cgi subdirectory", "webHandsaw html subdirectory"
+                     "webHandsaw cgi subdirectory", "webHandsaw html subdirectory" ,
+                     "ansi2html.py file"
                     ]
   if not httpdRC in ["httpd", "rc"]:
     print "Error: getConfigDict was expecting 'httpd' or 'rc' to specify what system it's retrieving parameters for, but it got %s" % httpdRC
@@ -66,7 +67,53 @@ def installRC(parameters):
 def installHTTPD(parameters):
   print "installation parameters are:" 
   pprint(parameters)
+  if not path.exists(parameters["ansi2html.py file"]):
+    print "Error: did not find the ansi2html.py file %s" % parameters["ansi2html.py file"]
+    print "You can get it from: https://github.com/Kronuz/ansi2html"
+    exit(1)
+  else:
+    print "Found the ansi2html file %s -- good! Continuing installation..." % parameters["ansi2html.py file"]
   checkHost(parameters["httpd machine"])
+  if not path.exists(parameters["httpd installation directory"]):
+    print "Error: httpd install directory not found on this machine: %s" % parameters["httpd installation directory"]
+    exit(1)
+  else: 
+    "httpd installation directory %s was found on this machine -- good! Continuing installation..." % parameters["httpd installation directory"]
+  cgiBinDir = path.join(parameters["httpd installation directory"], parameters["httpd cgi-bin directory"])
+  if not path.exists(cgiBinDir):
+    print "Error: httpd cgi-bin directory not found on this machine: %s" % cgiBinDir
+    exit(1)
+  else:
+    "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..."
+  htmlDir = path.join(parameters["httpd installation directory"], parameters["httpd html directory"])
+  if not path.exists(cgiBinDir):
+    print "Error: httpd html directory not found on this machine: %s" % cgiBinDir
+    exit(1)
+  else:
+    "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..."
+  cgiBinSubdir = path.join(cgiBinDir, parameters["webHandsaw cgi subdirectory"]) 
+  if path.exists(cgiBinSubdir):
+    print "Error: webHandsaw cgi subdirectory already exists in the requested location: %s" % cgiBinSubdir
+    exit(1)
+  else:
+    print "Making directory %s for webHandsaw's pyCGI files..." % cgiBinSubdir
+    makedirs(cgiBinSubdir)
+  htmlSubdir = path.join(htmlDir, parameters["webHandsaw html subdirectory"])
+  if path.exists(htmlSubdir):
+    print "Error: webHandsaw html subdirectory already exists in the requested location: %s" % htmlSubdir
+    exit(1)
+  else:
+    print "Making directory %s for webHandsaw's pyCGI files..." % cgiBinSubdir
+    makedirs(htmlSubdir)
+  print "Copying the html and pyCGI files into the directories %s and %s, respectively." % (htmlSubdir, cgiBinSubdir)
+  htmlFiles = ["../index.html", "../webHandsaw.css", "../webHandsaw.png", "../webHandsaw_black.png"]
+  cgiBinFiles = ["../viewLogs.py", "../logHtml.py", "../forcelink.py", parameters["ansi2html.py file"]]
+  for htmlFile in htmlFiles:
+    shutil.copy(htmlFile, htmlSubdir)
+  for cgiBinFile in cgiBinFiles:
+    shutil.copy(cgiBinFile, cgiBinSubdir)
+  print "Installation on httpd machine done."
+  print "The splash page should be visible at: %s.[network]/%s" % (parameters["httpd machine"], parameters["webHandsaw html subdirectory"])
 
 if __name__ == "__main__":
   optParser = OptionParser()
