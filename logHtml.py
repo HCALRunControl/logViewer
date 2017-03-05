@@ -5,8 +5,10 @@ def getHeader():
   header = """
 <html>
   <head>
+     <title>webHandsaw -- HCAL logs</title>
      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700" rel="stylesheet" type="text/css">
      <link rel="stylesheet" type="text/css" href="/jhakala/webHandsaw.css"> 
+     <link rel="icon" type="image/png" href="/jhakala/webHandsaw_black.png">
      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
      <!-- <script src="/jhakala/contrast.js"></script> -->
   </head>
