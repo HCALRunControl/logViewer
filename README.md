@@ -1,6 +1,25 @@
 ## webHandsaw
 
-To deploy at systems like P5 or 904, the source files must be arranged like this:
+To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf.ini` to specify the installation setup. Then, one must run the webHandsawInstallation.py script on both the httpd machine and the run control machine.
+
+On the httpd machine:
+```
+python webHandsawInstallation.py -w httpd -s MY_System_Name
+```
+On the run control machine:
+```
+python webHandsawInstallation.py -w rc -s MY_System_Name
+```
+The `ansi2html.py` file can be taken from [here](https://github.com/Kronuz/ansi2html).
+
+To start the tool, the apache server must be running on the apache httpd machine, and the logCopy script must be started on the run control machine:
+```
+python logCopy.py &
+```
+
+Technical notes are in code comments.
+
+The source files are arranged like this after running the install script:
 ```
 httpd machine:
   /var/www
@@ -19,14 +38,3 @@ run control machine:
      mkLog2.sh
      forcelink.py
 ```
-
-The `ansi2html.py` file can be taken from [here](https://github.com/Kronuz/ansi2html).
-
-The way it is currently set up at P5 has `<nfshome0Dir> == ~johakala/logCopyer` and `<webHandsawDirsName> == jhakala` pending an official release. These are currently hardcoded in, so deploying webHandsaw elsewhere requires edits to the code to point at the right directories.
-
-To start the tool, the apache server must be running on the apache httpd machine, and the logCopy script must be started on the run control machine:
-```
-python logCopy.py &
-```
-
-Technical notes are in code comments.
