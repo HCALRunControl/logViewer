@@ -42,7 +42,8 @@ def formatMessages(messages):
 def getBody(numLines, filtLev, sysName):
   config = ConfigParser()
   config.read("webHandsaw_conf.ini")
-  body =  "    <!-- begin body -->\n"
+  body  = getHeader(config.get(sysName, "webHandsaw html subdirectory" ))
+  body +=  "    <!-- begin body -->\n"
   if not sysName in (config.sections()):
     body += "the system specified was not found: <tt>%s</tt>" % sysName
   elif numLines is not None and (isinstance(numLines, int) or isinstance(numLines, str)):
@@ -68,8 +69,7 @@ numberOfLines =  form.getvalue('numberOfLines')
 systemName =  form.getvalue('systemName')
 filterLevel =  form.getvalue('filter')
 
-html =  getHeader()
-html += getBody(numberOfLines, filterLevel, systemName)
+html = getBody(numberOfLines, filterLevel, systemName)
 html += getFooter()
 
 print "Content-type: text/html"
