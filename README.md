@@ -1,6 +1,6 @@
 ## webHandsaw
 
-To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf.ini` to specify the installation setup. Then, one must run the webHandsawInstallation.py script on both the httpd machine and the run control machine.
+To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf.ini` to specify the installation setup. Then, one must run the `webHandsawInstallation.py` script on both the httpd machine and the run control machine.
 
 On the httpd machine:
 ```
