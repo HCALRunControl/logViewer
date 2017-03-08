@@ -95,13 +95,13 @@ def installHTTPD(parameters, sysName, overwrite):
     print "Error: httpd cgi-bin directory not found on this machine: %s" % cgiBinDir
     exit(1)
   else:
-    "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..."
+    print "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..." % cgiBinDir
   htmlDir = path.join(parameters["httpd installation directory"], parameters["httpd html directory"])
-  if not path.exists(cgiBinDir):
-    print "Error: httpd html directory not found on this machine: %s" % cgiBinDir
+  if not path.exists(htmlDir):
+    print "Error: httpd html directory not found on this machine: %s" % htmlDir
     exit(1)
   else:
-    "httpd cgi-bin directory %s was found on this machine -- good! Continuing installation..."
+    print "httpd http directory %s was found on this machine -- good! Continuing installation..." % htmlDir
   cgiBinSubdir = path.join(cgiBinDir, parameters["webHandsaw cgi subdirectory"]) 
   if overwrite:
     shutil.rmtree(cgiBinSubdir)
