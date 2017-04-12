@@ -17,9 +17,16 @@ To start the tool, the apache server must be running on the apache httpd machine
 python logCopy.py &
 ```
 
+The webHandsawBot can be run on cmshcalweb01 as follows:
+```
+nohup python -u webHandsawBot.py > webHandsawBot.log 2>&1 &
+```
+Note that the webhook url has to be changed in the code for the bot to work (it has been removed from the code in github to prevent random flooding).
+
+
 Technical notes are in code comments.
 
-The source files are arranged like this after running the install script:
+The source files for webHandsaw and the logCopyer are arranged like this after running the install script:
 ```
 httpd machine:
   /var/www
@@ -38,3 +45,5 @@ run control machine:
      mkLog2.sh
      forcelink.py
 ```
+
+
