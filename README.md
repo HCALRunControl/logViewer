@@ -19,9 +19,11 @@ python logCopy.py &
 
 The webHandsawBot can be run on cmshcalweb01 as follows:
 ```
+ssh -f -ND 1080 <your_cmsusr_username>@cmsusr
 nohup python -u webHandsawBot.py > webHandsawBot.log 2>&1 &
 ```
 Note that the webhook url has to be changed in the code for the bot to work (it has been removed from the code in github to prevent random flooding).
+
 
 
 Technical notes are in code comments.
