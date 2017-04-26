@@ -24,7 +24,8 @@ nohup python -u webHandsawBot.py > webHandsawBot.log 2>&1 &
 ```
 Note that the webhook url has to be changed in the code for the bot to work (it has been removed from the code in github to prevent random flooding).
 
-
+Below is a diagram of the full infrastructure:
+<img src="stackDiagram" width="600px" />
 
 Technical notes are in code comments.
 
