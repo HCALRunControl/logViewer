@@ -16,7 +16,6 @@ class webHandsawParser(HTMLParser):
          HTMLParser.__init__(self)
          self.data = []
     def handle_data(self, data):
-         print "handling data:", data
          if not data.isspace() and not "Showing last 75000 lines of LogCollector logs." in data :
               self.data.append(data.strip())
     def clearLogs(self):
@@ -57,7 +56,7 @@ def sendSlackMessage(message):
   #print getoutput(incantation)
   
   # Set the webhook_url to the one provided by Slack when you create the webhook at https://my.slack.com/services/new/incoming-webhook/
-  webhook_url = 'https://hooks.slack.com/services/__SANITIZED__'
+  webhook_url = 'https://hooks.slack.com/services/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'
   slack_data = {'text': "Found this new error in webHandsaw! ```%s```" % message}
   
   response = requests.post(
@@ -90,8 +89,6 @@ while True:
     elif not ("WEBHANDSAW WARNING" in log or "Logs shown were last updated at" in log) and (not log in cachedLogs or foundNewLogs):
       newLogs.append(log) 
       foundNewLogs = True
-    else:
-      print "reached a strange place in the code, log: ", log
     
   if newLogs:
     print "new logs!"
