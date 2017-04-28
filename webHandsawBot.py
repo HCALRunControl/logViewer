@@ -45,11 +45,9 @@ def checkPage():
       elif "</tt>" in line:
         break
       else:
-        print "found beginning of logs:", line
         foundBeginning = True
         lineNumber += 1
         parser.feed(line)
-        print "fed line to parser, parser has", parser.data
 
 def sendSlackMessage(message):
   #incantation = "curl -X POST -H 'Content-type: application/json' --data '{"
@@ -59,7 +57,7 @@ def sendSlackMessage(message):
   #print getoutput(incantation)
   
   # Set the webhook_url to the one provided by Slack when you create the webhook at https://my.slack.com/services/new/incoming-webhook/
-  webhook_url = 'https://hooks.slack.com/services/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'
+  webhook_url = 'https://hooks.slack.com/services/__SANITIZED__'
   slack_data = {'text': "Found this new error in webHandsaw! ```%s```" % message}
   
   response = requests.post(
@@ -83,19 +81,17 @@ while True:
   for log in parser.data: 
     if "WEBHANDSAW WARNING" in log and not webHandsawStale:
       webHandsawStale = True
-      print "webHandsawStale = True" 
       newLogs.append(log)
       foundNewLogs = True
     elif webHandsawStale and "Logs shown were last updated at" in log:
-      print "unstale message found"
       if webHandsawStale:
         newLogs.append("webHandsaw logs have updated and no longer appear stale.")
       webHandsawStale = False
-      if not ("WEBHANDSAW WARNING" in log or "Logs shown were last updated at" in log) and (not log in cachedLogs or foundNewLogs):
-        newLogs.append(log) 
-        foundNewLogs = True
-    else: 
-      print "log:", log
+    elif not ("WEBHANDSAW WARNING" in log or "Logs shown were last updated at" in log) and (not log in cachedLogs or foundNewLogs):
+      newLogs.append(log) 
+      foundNewLogs = True
+    else:
+      print "reached a strange place in the code, log: ", log
     
   if newLogs:
     print "new logs!"
@@ -113,5 +109,5 @@ while True:
     print "webHandsawBot is up! parser has this:"
     print parser.data
     firstTime = False
-    sendSlackMessage("\n John is hacking at webHandsaw_bot. Pay no attention to the man behind the curtain.")
+    sendSlackMessage("\nwebHandsawBot is up and running with a few new upgrades.")
   cachedLogs = parser.data
