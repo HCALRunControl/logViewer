@@ -46,6 +46,14 @@ def checkPage():
       else:
         foundBeginning = True
         lineNumber += 1
+        if "A problem occurred in a Python script" in line:
+          print "there was a problem in webHandsaw, it returned this:"
+          print page
+          break
+        if "filterLevel" in line:
+          print "found a weird error message; webHandsaw returned this:"
+          print page
+          break
         parser.feed(line)
 
 def sendSlackMessage(message):
@@ -56,7 +64,7 @@ def sendSlackMessage(message):
   #print getoutput(incantation)
   
   # Set the webhook_url to the one provided by Slack when you create the webhook at https://my.slack.com/services/new/incoming-webhook/
-  webhook_url = 'https://hooks.slack.com/services/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'
+  webhook_url = 'https://hooks.slack.com/services/__SANITIZED__'
   slack_data = {'text': "Found this new error in webHandsaw! ```%s```" % message}
   
   response = requests.post(
@@ -106,5 +114,5 @@ while True:
     print "webHandsawBot is up! parser has this:"
     print parser.data
     firstTime = False
-    sendSlackMessage("\nwebHandsawBot is up and running with a few new upgrades.")
+    sendSlackMessage("\nwebHandsaw bot was just restarted by John to fix the double-posting problem.")
   cachedLogs = parser.data
