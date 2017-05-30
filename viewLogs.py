@@ -19,7 +19,7 @@ from ConfigParser import ConfigParser
 
 #def checkStaleness(staleTime, logCopyName):
 def checkStaleness(staleTime, logCopyName):
-  logTail =  getoutput("tail -80 %s" % logCopyName)
+  logTail =  getoutput("tail -500 %s" % logCopyName)
   timestamp = datetime.fromtimestamp(float(re.findall('(?<=timestamp=).+', logTail)[-1].split(" ")[0].replace('"', ''))/1000)  
   age = (datetime.now()-timestamp).total_seconds()
   if age > staleTime:
