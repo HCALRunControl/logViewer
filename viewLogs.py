@@ -1,6 +1,8 @@
 #!/usr/bin/python
+import re
 import cgi
 import cgitb; cgitb.enable()  # for troubleshooting
+from datetime import datetime
 from commands import getoutput
 from ansi2html import ansi2html
 from logHtml import *
@@ -15,13 +17,23 @@ from ConfigParser import ConfigParser
 # logHtml's helper functions are called to grab some chunks of html, and the html is assembled
 # finally, an html page is printed to stdout (which apache grabs and serves over the web)
 
-def getLastLogMessages(lines, filter, copyDir):
-  logCopyName = "%s/log_copy.xml" % copyDir
-  incantation = "tail -%i %s | ~hcalpro/scripts/Handsaw.pl" % (lines, logCopyName)
+#def checkStaleness(staleTime, logCopyName):
+def checkStaleness(staleTime, logCopyName):
+  logTail =  getoutput("tail -500 %s" % logCopyName)
+  timestamp = datetime.fromtimestamp(float(re.findall('(?<=timestamp=).+', logTail)[-1].split(" ")[0].replace('"', ''))/1000)  
+  age = (datetime.now()-timestamp).total_seconds()
+  if age > staleTime:
+    return "\n<br><span style='background-color: brown; color: cyan'> WEBHANDSAW WARNING! The logs appear to be stale. The newest log detected is %f seconds old. <br> Perhaps the logCopyer is down or RCMS is not writing a log at least every two minutes (it usually does this during normal operation even when no configuration is active.) </span><br>\n"  % age
+  else:
+    return "\n<br>Logs shown were last updated at %s \n" % timestamp.strftime("%H:%M:%S Geneva time.")
+    
+def getLastLogMessages(lines, filter, logCopy):
+
+  incantation = "tail -%i %s | ~hcalpro/scripts/Handsaw.pl" % (lines, logCopy)
   if filter is not None and filter in ["INFO", "WARN", "ERROR"]:
     incantation += " --FILTER=%s" % filter
   #incantation = "tail -%i /nfshome0/elaird/errors.txt" % lines
-  return getoutput(incantation)
+  return  getoutput(incantation)
 
 def changeColors(styledLine):
   styledLine = styledLine.replace('background-color:#00CD00', 'background-color:#00ae00; color:#ffffff')
@@ -31,8 +43,8 @@ def changeColors(styledLine):
   styledLine = styledLine.replace('background-color:#CDCD00', 'background-color:#e8e866')
   return styledLine
   
-def formatMessages(messages):
-  formattedMessages = "    <br><tt>\n    <br>"
+def formatMessages(messages, staleTime, logCopy):
+  formattedMessages = "    <br><tt>\n%s    <br>" % checkStaleness(staleTime, logCopy)
   for line in messages.splitlines():
     formattedMessages += changeColors(ansi2html(line, "xterm"))
     formattedMessages+="\n    <br>"
@@ -50,8 +62,14 @@ def getBody(numLines, filtLev, sysName):
     try: 
       nLines = int(numLines)
       if nLines > 0:
-        body += "    Showing last %i lines of logcollector logs" % nLines
-        body += formatMessages(getLastLogMessages(nLines, filtLev, config.get(sysName, "Log copy directory" )))
+        logCopyName = "%s/log_copy.xml" % config.get(sysName, "Log copy directory")
+        body += "    Showing last %i lines of LogCollector logs. <br>" % nLines
+        body += formatMessages( getLastLogMessages(nLines, filtLev, 
+                                                  logCopyName,
+                                                 ),
+                                float(config.get(sysName, "Log staleness timeout")),
+                                logCopyName
+                              )
       else:
         body += "    the numberOfLines submitted seems to be a weird number: <tt> %s </tt>" % str(numLines)
     except ValueError:

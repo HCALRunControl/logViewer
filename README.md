@@ -1,6 +1,6 @@
 ## webHandsaw
 
-To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf.ini` to specify the installation setup. Then, one must run the webHandsawInstallation.py script on both the httpd machine and the run control machine.
+To install webHandsaw on a system like P5 or 904, one must edit `webHandsaw_conf.ini` to specify the installation setup. Then, one must run the `webHandsawInstallation.py` script on both the httpd machine and the run control machine.
 
 On the httpd machine:
 ```
@@ -17,9 +17,19 @@ To start the tool, the apache server must be running on the apache httpd machine
 python logCopy.py &
 ```
 
+The webHandsawBot can be run on cmshcalweb01 as follows:
+```
+sudo -u daqowner ssh -f -ND 1080 <your_username>@cmsusr
+sudo -u daqowner nohup python -u webHandsawBot.py > /tmp/webHandsawBot.log 2>&1 &
+```
+Note that the webhook url has to be changed in the code for the bot to work (it has been removed from the code in github to prevent random flooding).
+
+Below is a diagram of the full infrastructure:
+<img src="stackDiagram.png" width="600px" />
+
 Technical notes are in code comments.
 
-The source files are arranged like this after running the install script:
+The source files for webHandsaw and the logCopyer are arranged like this after running the install script:
 ```
 httpd machine:
   /var/www
@@ -38,3 +48,5 @@ run control machine:
      mkLog2.sh
      forcelink.py
 ```
+
+
