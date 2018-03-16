@@ -46,6 +46,8 @@ def changeColors(styledLine):
 def formatMessages(messages, staleTime, logCopy):
   formattedMessages = "    <br><tt>\n%s    <br>" % checkStaleness(staleTime, logCopy)
   for line in messages.splitlines():
+    line = line.replace("<", "&lt;")
+    line = line.replace(">", "&gt;")
     formattedMessages += changeColors(ansi2html(line, "xterm"))
     formattedMessages+="\n    <br>"
   formattedMessages += "    </tt>"
