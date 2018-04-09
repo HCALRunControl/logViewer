@@ -7,6 +7,8 @@ from commands import getoutput
 from ansi2html import ansi2html
 from logHtml import *
 from ConfigParser import ConfigParser
+from os.path import getmtime
+from glob import glob
 
 # John Hakala, 2/25/17
 # this pyCGI script looks at the log copy (symlink) from logCopy.py
@@ -25,11 +27,11 @@ def checkStaleness(staleTime, logCopyName):
   if age > staleTime:
     return "\n<br><span style='background-color: brown; color: cyan'> WEBHANDSAW WARNING! The logs appear to be stale. The newest log detected is %f seconds old. <br> Perhaps the logCopyer is down or RCMS is not writing a log at least every two minutes (it usually does this during normal operation even when no configuration is active.) </span><br>\n"  % age
   else:
-    return "\n<br>Logs shown were last updated at %s \n" % timestamp.strftime("%H:%M:%S Geneva time.")
+    return "\n<br>Logs shown were last updated at %s \n" % timestamp.strftime("%H:%M:%S Chicago time.")
     
 def getLastLogMessages(lines, filter, logCopy):
 
-  incantation = "tail -%i %s | ~hcalpro/scripts/Handsaw.pl" % (lines, logCopy)
+  incantation = "tail -%i %s | ~daqowner/Handsaw.pl" % (lines, logCopy)
   if filter is not None and filter in ["INFO", "WARN", "ERROR"]:
     incantation += " --FILTER=%s" % filter
   #incantation = "tail -%i /nfshome0/elaird/errors.txt" % lines
@@ -46,6 +48,8 @@ def changeColors(styledLine):
 def formatMessages(messages, staleTime, logCopy):
   formattedMessages = "    <br><tt>\n%s    <br>" % checkStaleness(staleTime, logCopy)
   for line in messages.splitlines():
+    line = line.replace("<", "&lt;")
+    line = line.replace(">", "&gt;")
     formattedMessages += changeColors(ansi2html(line, "xterm"))
     formattedMessages+="\n    <br>"
   formattedMessages += "    </tt>"
@@ -62,7 +66,13 @@ def getBody(numLines, filtLev, sysName):
     try: 
       nLines = int(numLines)
       if nLines > 0:
-        logCopyName = "%s/log_copy.xml" % config.get(sysName, "Log copy directory")
+        #logCopyName = "%s/log_copy.xml" % config.get(sysName, "Log copy directory")
+        #logCopyName = "/tmp/LogCollectorFile_20180208_1.xml"
+        logFiles = glob("/tmp/LogCollector*.xml")
+        timestamps = [(logFile, getmtime(logFile)) for logFile in logFiles]
+        timestamps = sorted(timestamps, key=lambda x: x[1])
+        logCopyName = timestamps[-1][0]
+        
         body += "    Showing last %i lines of LogCollector logs. <br>" % nLines
         body += formatMessages( getLastLogMessages(nLines, filtLev, 
                                                   logCopyName,

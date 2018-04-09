@@ -18,10 +18,10 @@
     <div id="wrapper">
       This page will retrieve the latest logs from the LogCollector logs (just like <tt>tail -NUMBER</tt>).
       <br><br>
-      <form action="__REPLACE_ME__/viewLogs.py" type="submit" method="get">
+      <form action="/cgi-bin/viewLogs.cgi" type="submit" method="get">
         Number of lines to show:
         <input type="number" name="numberOfLines">
-        <input name="systemName" value="__ALSO_REPLACE_ME__" style="visibility: hidden">
+        <input name="systemName" value="FNAL" style="visibility: hidden">
         <br><br>
         Filter level: <br><tt>
           <input type="radio" name="filter" value="INFO" checked> info<br>
